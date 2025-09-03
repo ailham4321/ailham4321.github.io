@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Abdillah Ilham</title>
+
+<style>
+  body, html { margin:0; padding:0; font-family: system-ui,Segoe UI,Roboto,Arial; height:100%; }
+  .top { padding:12px; display:flex; gap:8px; align-items:center; background:#f6f6f6; border-bottom:1px solid #e6e6e6; }
+  .title { font-weight:600; }
+  .controls { margin-left:auto; }
+  .controls a { margin-left:8px; padding:8px 12px; border-radius:6px; border:1px solid #ddd; background:#fff; text-decoration:none; color:#111; }
+  .viewer { height:calc(100% - 56px); }
+  iframe { width:100%; height:100%; border:0; }
+
+  /* Hide everything for mobile except #mobile-view */
+  #mobile-view { display:none; padding:12px; text-align:center; }
+</style>
+
+<script>
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Hide full desktop content
+    document.addEventListener("DOMContentLoaded", function(){
+      document.body.innerHTML = `
+        <div id="mobile-view">
+          <h2>Curriculum Vitae — Abdillah Ilham</h2>
+          <div class="controls">
+            <a href="/documents/cv_id.pdf" download>Download PDF</a>
+            <a href="/documents/cv_id.pdf" target="_blank" rel="noopener">Open in new tab</a>
+          </div>
+          <iframe src="/documents/cv_id.pdf"></iframe>
+        </div>
+      `;
+    });
+  }
+</script>
+
+<link rel="stylesheet" href="/assets/css/templatemo-glossy-touch-CV.css">
+
+</head>
+<body>
+
+<!-- Full desktop content -->
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">
+          <!-- SVG omitted for brevity -->
+        </div>
+        <div class="site-title">
+          <span class="name">Abdillah Ilham</span>
+          <span class="subtitle">Personal Website</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="/id/cv" class="active">Indonesia</a>
+        <a href="/en/cv">English</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="top">
+  <div class="title">Curriculum Vitae milik Abdillah Ilham</div>
+  <div class="controls">
+    <a href="/documents/cv_id.pdf" download>Download PDF</a>
+    <a href="/documents/cv_id.pdf" target="_blank" rel="noopener">Open in new tab</a>
+  </div>
+</div>
+
+<div class="viewer">
+  <iframe src="/documents/cv_id.pdf"></iframe>
+</div>
+
+</body>
+</html>
