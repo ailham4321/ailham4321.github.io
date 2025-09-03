@@ -5,27 +5,49 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CV — Abdillah Ilham</title>
   <style>
-    body,html{height:100%;margin:0;font-family:system-ui,Segoe UI,Roboto,Arial}
-    .top{padding:12px;display:flex;gap:8px;align-items:center;background:#f6f6f6;border-bottom:1px solid #e6e6e6}
-    .title{font-weight:600}
-    .controls{margin-left:auto}
-    .controls a, .controls button{margin-left:8px;padding:8px 12px;border-radius:6px;border:1px solid #ddd;background:#fff;text-decoration:none;color:#111}
-    .viewer{height:calc(100% - 56px)} /* adjust if header height changes */
-    iframe{width:100%;height:100%;border:0}
+    body,html {
+      height:100%;
+      margin:0;
+      font-family:system-ui,Segoe UI,Roboto,Arial
+    }
+    .top {
+      padding:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:#f6f6f6;
+      border-bottom:1px solid #e6e6e6
+    }
+    .btn {
+      padding:8px 12px;
+      border-radius:6px;
+      border:1px solid #ddd;
+      background:#fff;
+      text-decoration:none;
+      color:#111;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .viewer {
+      height:calc(100% - 56px); /* adjust if header height changes */
+    }
+    iframe {
+      width:100%;
+      height:100%;
+      border:0;
+    }
   </style>
 </head>
 <body>
   <div class="top">
-    <div class="title">Curriculum Vitae of Abdillah Ilham</div>
-    <div class="controls">
-      <!-- Root-relative path so it works from any folder on your user site -->
-      <a href="/documents/cv_en.pdf" download>Download PDF</a>
-      <a href="/documents/cv_en.pdf" target="_blank" rel="noopener">Open in new tab</a>
-    </div>
+    <!-- Left button: goes to another link -->
+    <a href="ailham4321.github.io" class="btn">Personal Website</a>
+    <!-- Right button: download CV -->
+    <a href="/documents/cv_en.pdf" class="btn" download>Download CV</a>
   </div>
 
   <div class="viewer">
-    <!-- iframe/embed/object all fine; iframe recommended for simplicity -->
+    <!-- Embed PDF directly -->
     <iframe src="/documents/cv_en.pdf"></iframe>
   </div>
 </body>
