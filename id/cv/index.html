@@ -19,23 +19,13 @@
 </style>
 
 <script>
-  const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) {
-    // Hide full desktop content
-    document.addEventListener("DOMContentLoaded", function(){
-      document.body.innerHTML = `
-        <div id="mobile-view">
-          <h2>Curriculum Vitae — Abdillah Ilham</h2>
-          <div class="controls">
-            <a href="/documents/cv_id.pdf" download>Download PDF</a>
-            <a href="/documents/cv_id.pdf" target="_blank" rel="noopener">Open in new tab</a>
-          </div>
-          <iframe src="/documents/cv_id.pdf"></iframe>
-        </div>
-      `;
-    });
+  // Check if the user is on a mobile device
+  if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    // Redirect to the mobile-friendly PDF
+    window.location.href = "./documents/cv";
   }
 </script>
+
 
 <link rel="stylesheet" href="/assets/css/templatemo-glossy-touch-CV.css">
 
