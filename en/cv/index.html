@@ -1,50 +1,91 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CV — Abdillah Ilham</title>
-  <style>
-    body,html {
-      height:100%;
-      margin:0;
-      font-family:system-ui,Segoe UI,Roboto,Arial
-    }
-    .top {
-      padding:12px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      background:#f6f6f6;
-      border-bottom:1px solid #e6e6e6
-    }
-    .btn {
-      padding:8px 12px;
-      border-radius:6px;
-      border:1px solid #ddd;
-      background:#fff;
-      text-decoration:none;
-      color:#111;
-      font-size:14px;
-      white-space:nowrap;
-    }
-    .viewer {
-      height:calc(100% - 56px); /* adjust if header height changes */
-    }
-    iframe {
-      width:100%;
-      height:100%;
-      border:0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Abdillah Ilham</title>
+
+<style>
+  body, html { margin:0; padding:0; font-family: system-ui,Segoe UI,Roboto,Arial; height:100%; }
+  .top { padding:12px; display:flex; gap:8px; align-items:center; background:#f6f6f6; border-bottom:1px solid #e6e6e6; }
+  .title { font-weight:600; }
+  .controls { margin-left:auto; }
+  .controls a { margin-left:8px; padding:8px 12px; border-radius:6px; border:1px solid #ddd; background:#fff; text-decoration:none; color:#111; }
+  .viewer { height:calc(100% - 56px); }
+  iframe { width:100%; height:100%; border:0; }
+
+  /* Hide everything for mobile except #mobile-view */
+  #mobile-view { display:none; padding:12px; text-align:center; }
+</style>
+
+
+<link rel="stylesheet" href="/assets/css/templatemo-glossy-touch-cv.css">
+
 </head>
 <body>
-  <div class="top">
-    <!-- Left button: goes to another link -->
-    <a href="ailham4321.github.io" class="btn">Personal Website</a>
-    <!-- Right button: download CV -->
-    <a href="/documents/cv_en.pdf" class="btn" download>Download CV</a>
+
+<!-- Full desktop content -->
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Grid of circles with varying sizes -->
+                            <circle cx="16" cy="16" r="5" opacity="0.9"/>
+                            <circle cx="32" cy="16" r="4" opacity="0.8"/>
+                            <circle cx="16" cy="32" r="4" opacity="0.7"/>
+                            <circle cx="32" cy="32" r="5" opacity="0.85"/>
+                            <!-- Small accent dots -->
+                            <circle cx="24" cy="8" r="2" opacity="1"/>
+                            <circle cx="8" cy="24" r="2" opacity="0.9"/>
+                            <circle cx="40" cy="24" r="2" opacity="0.9"/>
+                            <circle cx="24" cy="40" r="2" opacity="1"/>
+                            <!-- Tiny corner dots -->
+                            <circle cx="8" cy="8" r="1" opacity="0.6"/>
+                            <circle cx="40" cy="8" r="1" opacity="0.6"/>
+                            <circle cx="8" cy="40" r="1" opacity="0.6"/>
+                            <circle cx="40" cy="40" r="1" opacity="0.6"/>
+                        </svg>
+        </div>
+        <div class="site-title">
+          <span class="name">Abdillah Ilham</span>
+          <span class="subtitle">Personal Website</span>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; width:75%;">
+        <!-- Download button -->
+        <div class="nav-links">
+              <a href="/documents/cv_en.pdf" download>Download CV</a>
+        </div>
+      
+        <!-- Ind/Eng toggle wrapper -->
+        <span style="display:inline-flex; white-space:nowrap;
+                     border:1px solid rgba(255,255,255,0.4);
+                     border-radius:8px; overflow:hidden;">
+
+          <!-- Ind button -->
+          <a href="/id/cv"
+             style="display:inline-block; margin:0; padding:8px 14px; font-size:14px;
+                    text-decoration:none; color:rgba(255,255,255,0.9);
+                    background:transparent;">
+            Ind
+          </a>
+        
+          <!-- Eng button (active) -->
+          <a href="/en/cv" class="active"
+             style="display:inline-block; margin:0; padding:8px 14px; font-size:14px;
+                    text-decoration:none; color:#fff;
+                    background:rgba(255,255,255,0.1);
+                    text-shadow:0 0 10px rgba(255,255,255,0.5);">
+            Eng
+          </a>
+        </span>
+      </div>
+    </nav>
   </div>
+
+</header>
 
   <div class="viewer">
     <!-- Embed PDF directly -->

@@ -18,16 +18,8 @@
   #mobile-view { display:none; padding:12px; text-align:center; }
 </style>
 
-<script>
-  // Check if the user is on a mobile device
-  if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    // Redirect to the mobile-friendly PDF
-    window.location.href = "./documents/cv";
-  }
-</script>
 
-
-<link rel="stylesheet" href="/assets/css/templatemo-glossy-touch-CV.css">
+<link rel="stylesheet" href="/assets/css/templatemo-glossy-touch-cv.css">
 
 </head>
 <body>
@@ -38,32 +30,66 @@
     <nav>
       <div class="logo">
         <div class="logo-icon">
-          <!-- SVG omitted for brevity -->
+          <svg viewBox="0 0 48 48" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Grid of circles with varying sizes -->
+                            <circle cx="16" cy="16" r="5" opacity="0.9"/>
+                            <circle cx="32" cy="16" r="4" opacity="0.8"/>
+                            <circle cx="16" cy="32" r="4" opacity="0.7"/>
+                            <circle cx="32" cy="32" r="5" opacity="0.85"/>
+                            <!-- Small accent dots -->
+                            <circle cx="24" cy="8" r="2" opacity="1"/>
+                            <circle cx="8" cy="24" r="2" opacity="0.9"/>
+                            <circle cx="40" cy="24" r="2" opacity="0.9"/>
+                            <circle cx="24" cy="40" r="2" opacity="1"/>
+                            <!-- Tiny corner dots -->
+                            <circle cx="8" cy="8" r="1" opacity="0.6"/>
+                            <circle cx="40" cy="8" r="1" opacity="0.6"/>
+                            <circle cx="8" cy="40" r="1" opacity="0.6"/>
+                            <circle cx="40" cy="40" r="1" opacity="0.6"/>
+                        </svg>
         </div>
         <div class="site-title">
           <span class="name">Abdillah Ilham</span>
-          <span class="subtitle">Personal Website</span>
+          <span class="subtitle">Laman Profesional</span>
         </div>
       </div>
-      <div class="nav-links">
-        <a href="/id/cv" class="active">Indonesia</a>
-        <a href="/en/cv">English</a>
+      <div style="display:flex; justify-content:space-between; align-items:center; width:75%;">
+        <!-- Download button -->
+        <div class="nav-links">
+              <a href="/documents/cv_en.pdf" download>Unduh CV</a>
+        </div>
+      
+        <!-- Ind/Eng toggle wrapper -->
+        <span style="display:inline-flex; white-space:nowrap;
+                     border:1px solid rgba(255,255,255,0.4);
+                     border-radius:8px; overflow:hidden;">
+
+          <!-- Ind button -->
+          <a href="/id/cv" class="active"
+             style="display:inline-block; margin:0; padding:8px 14px; font-size:14px;
+                    text-decoration:none; color:#fff;
+                    background:rgba(255,255,255,0.1);
+                    text-shadow:0 0 10px rgba(255,255,255,0.5);">
+            Ind
+          </a>
+        
+          <!-- Eng button (active) -->
+          <a href="/en/cv" 
+             style="display:inline-block; margin:0; padding:8px 14px; font-size:14px;
+                    text-decoration:none; color:rgba(255,255,255,0.9);
+                    background:transparent;">
+            Eng
+          </a>
+        </span>
       </div>
     </nav>
   </div>
+
 </header>
 
-<div class="top">
-  <div class="title">Curriculum Vitae milik Abdillah Ilham</div>
-  <div class="controls">
-    <a href="/documents/cv_id.pdf" download>Download PDF</a>
-    <a href="/documents/cv_id.pdf" target="_blank" rel="noopener">Open in new tab</a>
+  <div class="viewer">
+    <!-- Embed PDF directly -->
+    <iframe src="https://docs.google.com/gview?url=https://ailham4321.github.io/documents/cv_en.pdf&embedded=true"></iframe>
   </div>
-</div>
-
-<div class="viewer">
-  <iframe src="/documents/cv_id.pdf"></iframe>
-</div>
-
 </body>
 </html>
