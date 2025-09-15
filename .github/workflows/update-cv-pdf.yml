@@ -1,0 +1,58 @@
+name: Update CV PDF
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download DOCX from OneDrive
+        run: |
+          if [ -z "${{ secrets.ONEDRIVE_DOCX_URL }}" ]; then
+            echo "ERROR: Set repository secret ONEDRIVE_DOCX_URL to a public OneDrive share link to your DOCX." >&2
+            exit 1
+          fi
+          curl -L --fail -o cv.docx "${{ secrets.ONEDRIVE_DOCX_URL }}"
+
+      - name: Convert DOCX to PDF (LibreOffice)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libreoffice
+          mkdir -p documents
+          soffice --headless --convert-to pdf --outdir documents cv.docx
+          # Normalize final name used by site
+          # LibreOffice names output based on input; handle both possibilities
+          if [ -f documents/cv.pdf ]; then
+            mv -f documents/cv.pdf documents/Abdillah-Ilham-CV-Indonesia.pdf
+          elif [ -f documents/cv.pdf ]; then
+            mv -f documents/cv.pdf documents/Abdillah-Ilham-CV-Indonesia.pdf
+          else
+            # Find a single produced pdf
+            OUT=$(ls documents/*.pdf | head -n 1)
+            if [ -n "$OUT" ]; then
+              mv -f "$OUT" documents/Abdillah-Ilham-CV-Indonesia.pdf
+            else
+              echo "ERROR: No PDF produced by LibreOffice" >&2
+              exit 1
+            fi
+          fi
+
+      - name: Commit if changed
+        run: |
+          git add documents/Abdillah-Ilham-CV-Indonesia.pdf
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update CV PDF from OneDrive"
+          git push
