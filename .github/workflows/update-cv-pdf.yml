@@ -14,33 +14,59 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download DOCX from OneDrive
+      - name: Fetch and convert to PDF
         run: |
-          if [ -z "${{ secrets.ONEDRIVE_DOCX_URL }}" ]; then
+          set -euo pipefail
+          URL="${{ secrets.ONEDRIVE_DOCX_URL }}"
+          if [ -z "${URL}" ]; then
             echo "ERROR: Set repository secret ONEDRIVE_DOCX_URL to a public OneDrive share link to your DOCX." >&2
             exit 1
           fi
-          curl -L --fail -o cv.docx "${{ secrets.ONEDRIVE_DOCX_URL }}"
 
-      - name: Convert DOCX to PDF (LibreOffice)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libreoffice
           mkdir -p documents
-          soffice --headless --convert-to pdf --outdir documents cv.docx
-          # Normalize final name used by site
-          # LibreOffice names output based on input; handle both possibilities
-          if [ -f documents/cv.pdf ]; then
-            mv -f documents/cv.pdf documents/Abdillah-Ilham-CV-Indonesia.pdf
-          elif [ -f documents/cv.pdf ]; then
-            mv -f documents/cv.pdf documents/Abdillah-Ilham-CV-Indonesia.pdf
-          else
-            # Find a single produced pdf
-            OUT=$(ls documents/*.pdf | head -n 1)
-            if [ -n "$OUT" ]; then
-              mv -f "$OUT" documents/Abdillah-Ilham-CV-Indonesia.pdf
+          echo "Attempting direct DOCX download..."
+          curl -L --fail -o cv.docx "$URL" || true
+
+          IS_DOCX=0
+          if [ -f cv.docx ]; then
+            # Check if file is a ZIP (DOCX is a zip container)
+            if command -v file >/dev/null 2>&1; then
+              if file cv.docx | grep -qi "zip archive"; then
+                IS_DOCX=1
+              fi
             else
+              # Fallback quick check: first 4 bytes 'PK' for zip
+              if head -c 4 cv.docx | grep -q "PK"; then
+                IS_DOCX=1
+              fi
+            fi
+          fi
+
+          if [ "$IS_DOCX" -eq 1 ]; then
+            echo "DOCX download succeeded; converting via LibreOffice..."
+            sudo apt-get update
+            sudo apt-get install -y libreoffice
+            soffice --headless --convert-to pdf --outdir documents cv.docx
+            # Normalize final name used by site
+            OUT=$(ls -1 documents/*.pdf 2>/dev/null | head -n 1 || true)
+            if [ -z "$OUT" ]; then
               echo "ERROR: No PDF produced by LibreOffice" >&2
+              exit 1
+            fi
+            mv -f "$OUT" documents/Abdillah-Ilham-CV-Indonesia.pdf
+          else
+            echo "Direct DOCX not accessible; trying Office Online export..."
+            # URL-encode using Python (available on ubuntu-latest). Pass URL via argv.
+            ENCODED=$(python3 - "$URL" <<'PY'
+import sys, urllib.parse
+print(urllib.parse.quote(sys.argv[1], safe=''))
+PY
+)
+            curl -L --fail -o documents/Abdillah-Ilham-CV-Indonesia.pdf \
+              "https://export.word.officeapps.live.com/export?format=pdf&url=${ENCODED}"
+
+            if [ ! -s documents/Abdillah-Ilham-CV-Indonesia.pdf ]; then
+              echo "ERROR: Office export failed. Ensure your OneDrive link allows 'Anyone with the link' to view." >&2
               exit 1
             fi
           fi
