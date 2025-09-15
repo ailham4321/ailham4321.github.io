@@ -57,6 +57,34 @@ jobs:
             fi
           fi
 
+          # If not a DOCX yet, try scraping the page for a download link
+          if [ "$IS_DOCX" -ne 1 ]; then
+            echo "First attempt didn't yield a DOCX; trying to extract direct download link from page HTML..."
+            rm -f cv.docx || true
+            PAGE=$(mktemp)
+            curl -A "$UA" -sSL -o "$PAGE" "${RESOLVED:-$URL}"
+            DL_PATH=$(grep -oE 'download\?resid=[^&"\\]+'&authkey=[^&"\\]+' "$PAGE" | head -n 1 | sed 's/&amp;/\&/g' || true)
+            if [ -n "$DL_PATH" ]; then
+              URL_DL="https://onedrive.live.com/${DL_PATH}"
+              echo "Found download link in HTML; retrying DOCX download..."
+              curl -A "$UA" -L --fail -o cv.docx "$URL_DL" || true
+              # Re-check
+              if [ -f cv.docx ]; then
+                if command -v file >/dev/null 2>&1; then
+                  if file cv.docx | grep -qi "zip archive"; then
+                    IS_DOCX=1
+                  fi
+                else
+                  if head -c 4 cv.docx | grep -q "PK"; then
+                    IS_DOCX=1
+                  fi
+                fi
+              fi
+            else
+              echo "No direct download link found in HTML."
+            fi
+          fi
+
           if [ "$IS_DOCX" -eq 1 ]; then
             echo "DOCX download succeeded; converting via LibreOffice..."
             sudo apt-get update
