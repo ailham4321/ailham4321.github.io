@@ -56,12 +56,8 @@ jobs:
             mv -f "$OUT" documents/Abdillah-Ilham-CV-Indonesia.pdf
           else
             echo "Direct DOCX not accessible; trying Office Online export..."
-            # URL-encode using Python (available on ubuntu-latest). Pass URL via argv.
-            ENCODED=$(python3 - "$URL" <<'PY'
-import sys, urllib.parse
-print(urllib.parse.quote(sys.argv[1], safe=''))
-PY
-)
+            # URL-encode using Python (one-liner avoids YAML heredoc indent issues)
+            ENCODED=$(python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=''))" "$URL")
             curl -L --fail -o documents/Abdillah-Ilham-CV-Indonesia.pdf \
               "https://export.word.officeapps.live.com/export?format=pdf&url=${ENCODED}"
 
