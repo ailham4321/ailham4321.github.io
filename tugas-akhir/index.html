@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Abdillah Ilham</title>
+
+<style>
+  body, html { margin:0; padding:0; font-family: system-ui,Segoe UI,Roboto,Arial; height:100%; }
+  .top { padding:12px; display:flex; gap:8px; align-items:center; background:#f6f6f6; border-bottom:1px solid #e6e6e6; }
+  .title { font-weight:600; }
+  .controls { margin-left:auto; }
+  .controls a { margin-left:8px; padding:8px 12px; border-radius:6px; border:1px solid #ddd; background:#fff; text-decoration:none; color:#111; }
+  .viewer { height:calc(100% - 56px); }
+  iframe { width:100%; height:100%; border:0; }
+
+  /* Hide everything for mobile except #mobile-view */
+  #mobile-view { display:none; padding:12px; text-align:center; }
+</style>
+
+
+<link rel="stylesheet" href="/assets/css/templatemo-glossy-touch-cv.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon.ico">
+
+</head>
+<body>
+
+<!-- Full desktop content -->
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 48 48" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Grid of circles with varying sizes -->
+                            <circle cx="16" cy="16" r="5" opacity="0.9"/>
+                            <circle cx="32" cy="16" r="4" opacity="0.8"/>
+                            <circle cx="16" cy="32" r="4" opacity="0.7"/>
+                            <circle cx="32" cy="32" r="5" opacity="0.85"/>
+                            <!-- Small accent dots -->
+                            <circle cx="24" cy="8" r="2" opacity="1"/>
+                            <circle cx="8" cy="24" r="2" opacity="0.9"/>
+                            <circle cx="40" cy="24" r="2" opacity="0.9"/>
+                            <circle cx="24" cy="40" r="2" opacity="1"/>
+                            <!-- Tiny corner dots -->
+                            <circle cx="8" cy="8" r="1" opacity="0.6"/>
+                            <circle cx="40" cy="8" r="1" opacity="0.6"/>
+                            <circle cx="8" cy="40" r="1" opacity="0.6"/>
+                            <circle cx="40" cy="40" r="1" opacity="0.6"/>
+                        </svg>
+        </div>
+        <a href="https://ailham4321.github.io" style="text-decoration:none; color:inherit;">
+            <div class="site-title">
+              <span class="name">Abdillah Ilham</span>
+              <span class="subtitle">Laman Personal</span>
+            </div>
+          </a>
+      </div>
+      
+    </nav>
+  </div>
+
+</header>
+
+  <div class="viewer">
+    <!-- Embed PDF directly -->
+    <div id="pdf-fallback" style="display:none; padding:12px; text-align:center;">
+      Kesulitan memuat PDF? 
+      <a href="/documents/Abdillah-Ilham-Tugas-Akhir.pdf" target="_blank" rel="noopener">Buka di tab baru</a>
+      <button id="pdf-reload" style="margin-left:8px; padding:6px 10px;">Muat ulang</button>
+    </div>
+    <iframe id="pdfFrame" src="https://docs.google.com/gview?url=https://ailham4321.github.io/documents/Abdillah-Ilham-Tugas-Akhir.pdf&embedded=true"></iframe>
+  </div>
+  <script>
+    (function(){
+      const iframe = document.getElementById('pdfFrame');
+      if(!iframe) return;
+      const directUrl = '/documents/Abdillah-Ilham-Tugas-Akhir.pdf';
+      const absoluteDirect = 'https://ailham4321.github.io' + directUrl;
+      const gviewBase = 'https://docs.google.com/gview?embedded=true&url=';
+      const gviewUrl = gviewBase + encodeURIComponent(absoluteDirect);
+      const fb = document.getElementById('pdf-fallback');
+      const reloadBtn = document.getElementById('pdf-reload');
+      let attempt = 0;
+      const maxAttempts = 3;
+
+      function setSrc(url){
+        const sep = url.includes('?') ? '&' : '?';
+        iframe.src = url + sep + 't=' + Date.now();
+      }
+
+      function tryLoad(){
+        attempt++;
+        // Alternate between Google Viewer and direct PDF embed
+        if (attempt % 2 === 1) {
+          setSrc(gviewUrl);
+        } else {
+          // Some viewers respect fragment options; toolbar=0 hides UI in some browsers
+          setSrc(directUrl + '#toolbar=0');
+        }
+
+        const timer = setTimeout(() => {
+          if (attempt < maxAttempts) {
+            tryLoad();
+          } else if (fb) {
+            fb.style.display = 'block';
+          }
+        }, 3000);
+
+        function onload(){
+          clearTimeout(timer);
+          iframe.removeEventListener('load', onload);
+          if (fb) fb.style.display = 'none';
+        }
+        iframe.addEventListener('load', onload);
+      }
+
+      // Kick off with a fresh load to bypass caches
+      tryLoad();
+
+      if (reloadBtn) {
+        reloadBtn.addEventListener('click', () => {
+          attempt = 0;
+          if (fb) fb.style.display = 'none';
+          tryLoad();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
