@@ -24,8 +24,23 @@ jobs:
           fi
 
           mkdir -p documents
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+
+          # Try to resolve 1drv.ms/Doc.aspx viewer links to a direct download URL
+          echo "Resolving share link to direct download if possible..."
+          RESOLVED=$(curl -A "$UA" -sS -L -o /dev/null -w '%{url_effective}' "$URL" || true)
+          URL_DL=""
+          if echo "$RESOLVED" | grep -qi 'resid='; then
+            RESID=$(printf '%s' "$RESOLVED" | sed -n 's/.*[?&]resid=\([^&]*\).*/\1/p')
+            AUTHKEY=$(printf '%s' "$RESOLVED" | sed -n 's/.*[?&]authkey=\([^&]*\).*/\1/p')
+            if [ -n "${RESID}" ] && [ -n "${AUTHKEY}" ]; then
+              URL_DL="https://onedrive.live.com/download?resid=${RESID}&authkey=${AUTHKEY}"
+              echo "Derived direct download URL via resid/authkey."
+            fi
+          fi
+
           echo "Attempting direct DOCX download..."
-          curl -L --fail -o cv.docx "$URL" || true
+          curl -A "$UA" -L --fail -o cv.docx "${URL_DL:-$URL}" || true
 
           IS_DOCX=0
           if [ -f cv.docx ]; then
@@ -57,11 +72,11 @@ jobs:
           else
             echo "Direct DOCX not accessible; trying Office Online export..."
             # URL-encode using Python (one-liner avoids YAML heredoc indent issues)
-            ENCODED=$(python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=''))" "$URL")
+            ENCODED=$(python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=''))" "${URL_DL:-$URL}")
 
             # Try export with retries and capture errors without bailing immediately
             set +e
-            curl -L --fail --retry 3 --retry-delay 2 -sS \
+            curl -A "$UA" -L --fail --retry 3 --retry-delay 2 -sS \
               -o documents/Abdillah-Ilham-CV-Indonesia.pdf \
               "https://export.word.officeapps.live.com/export?format=pdf&url=${ENCODED}"
             RC=$?
