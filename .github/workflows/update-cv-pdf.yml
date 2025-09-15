@@ -58,11 +58,18 @@ jobs:
             echo "Direct DOCX not accessible; trying Office Online export..."
             # URL-encode using Python (one-liner avoids YAML heredoc indent issues)
             ENCODED=$(python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=''))" "$URL")
-            curl -L --fail -o documents/Abdillah-Ilham-CV-Indonesia.pdf \
-              "https://export.word.officeapps.live.com/export?format=pdf&url=${ENCODED}"
 
-            if [ ! -s documents/Abdillah-Ilham-CV-Indonesia.pdf ]; then
-              echo "ERROR: Office export failed. Ensure your OneDrive link allows 'Anyone with the link' to view." >&2
+            # Try export with retries and capture errors without bailing immediately
+            set +e
+            curl -L --fail --retry 3 --retry-delay 2 -sS \
+              -o documents/Abdillah-Ilham-CV-Indonesia.pdf \
+              "https://export.word.officeapps.live.com/export?format=pdf&url=${ENCODED}"
+            RC=$?
+            set -e
+
+            if [ $RC -ne 0 ] || [ ! -s documents/Abdillah-Ilham-CV-Indonesia.pdf ]; then
+              echo "Office export failed (curl exit $RC)." >&2
+              echo "Hint: Ensure your OneDrive link is set to 'Anyone with the link can view' and is the actual share link copied from OneDrive (not a redirected URL)." >&2
               exit 1
             fi
           fi
