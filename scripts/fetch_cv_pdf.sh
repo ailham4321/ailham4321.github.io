@@ -98,6 +98,20 @@ PY
   fi
 fi
 
+# 3.5) Try OneDrive Public Shares API (works with public share links)
+if ! is_docx cv.docx; then
+  echo "Trying OneDrive public shares API"
+  # Base64url encode the original share URL
+  share_id=$(python3 - <<'PY'
+import sys, base64
+u=sys.stdin.read().strip().encode('utf-8')
+print('u!' + base64.urlsafe_b64encode(u).decode('ascii').rstrip('='))
+PY
+  <<<"$URL")
+  curl -A "$UA" -L --fail -o cv.docx \
+    "https://api.onedrive.com/v1.0/shares/${share_id}/driveItem/content" || true
+fi
+
 # 4) Convert if we have a DOCX
 if is_docx cv.docx; then
   echo "Converting with LibreOffice"
