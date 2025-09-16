@@ -92,8 +92,69 @@
 </header>
 
   <div class="viewer">
-    <!-- Embed PDF directly -->
-  <iframe src="https://docs.google.com/gview?url=https://ailham4321.github.io/documents/Abdillah-Ilham-CV-Indonesia.pdf&embedded=true"></iframe>
+    <!-- Resilient PDF viewer with fallback and reload -->
+    <div id="pdf-fallback" style="display:none; padding:12px; text-align:center;">
+      Kesulitan memuat PDF?
+      <a href="/documents/Abdillah-Ilham-CV-Indonesia.pdf" target="_blank" rel="noopener">Buka di tab baru</a>
+      <button id="pdf-reload" style="margin-left:8px; padding:6px 10px;">Muat ulang</button>
+    </div>
+    <iframe id="pdfFrame" src="about:blank"></iframe>
   </div>
+  <script>
+    (function(){
+      const iframe = document.getElementById('pdfFrame');
+      if(!iframe) return;
+      const directUrl = '/documents/Abdillah-Ilham-CV-Indonesia.pdf';
+      const absoluteDirect = 'https://ailham4321.github.io' + directUrl;
+      const gviewBase = 'https://docs.google.com/gview?embedded=true&url=';
+      const gviewUrl = gviewBase + encodeURIComponent(absoluteDirect);
+      const fb = document.getElementById('pdf-fallback');
+      const reloadBtn = document.getElementById('pdf-reload');
+      let attempt = 0;
+      const maxAttempts = 3;
+
+      function setSrc(url){
+        const sep = url.includes('?') ? '&' : '?';
+        iframe.src = url + sep + 't=' + Date.now();
+      }
+
+      function tryLoad(){
+        attempt++;
+        // Alternate between Google Viewer and direct PDF embed
+        if (attempt % 2 === 1) {
+          setSrc(gviewUrl);
+        } else {
+          // Some viewers respect fragment options; toolbar=0 hides UI in some browsers
+          setSrc(directUrl + '#toolbar=0');
+        }
+
+        const timer = setTimeout(() => {
+          if (attempt < maxAttempts) {
+            tryLoad();
+          } else if (fb) {
+            fb.style.display = 'block';
+          }
+        }, 3000);
+
+        function onload(){
+          clearTimeout(timer);
+          iframe.removeEventListener('load', onload);
+          if (fb) fb.style.display = 'none';
+        }
+        iframe.addEventListener('load', onload);
+      }
+
+      // Kick off with a fresh load to bypass caches
+      tryLoad();
+
+      if (reloadBtn) {
+        reloadBtn.addEventListener('click', () => {
+          attempt = 0;
+          if (fb) fb.style.display = 'none';
+          tryLoad();
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
